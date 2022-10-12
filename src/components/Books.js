@@ -1,9 +1,13 @@
 import React from 'react';
 import apiClient from '../services/api';
+import {isAuth} from '../auth';
+import e from 'cors';
 
 const Books = (props) => {
     const [books, setBooks] = React.useState([]);
+    const [auth, setAuth] = React.useState(false);
     React.useEffect(() => {
+        isLoggedIn()
         if (props.loggedIn) {
             apiClient.get('/api/book')
             .then(response => {
@@ -12,6 +16,9 @@ const Books = (props) => {
             .catch(error => console.error(error));
         }
     }, []);
+    const isLoggedIn = () => {
+        setAuth(isAuth())
+    }
     const bookList = books.map((book) => 
         <div key={book.id}
             className="list-group-item"
@@ -20,7 +27,7 @@ const Books = (props) => {
             <small>{book.author}</small>
         </div>
     );
-    if (props.loggedIn) {
+    if (auth) {
         return (
             <div className="list-group">{bookList}</div>
         );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { setToken } from '../auth';
 import apiClient from '../services/api';
 
 const Login = (props) => {
@@ -14,7 +15,6 @@ const Login = (props) => {
         setUnknownError(false);
         apiClient.get('/sanctum/csrf-cookie')
         .then(response => {
-            console.log(response)
             apiClient.post('/api/login', {
                 email: email,
                 password: password
@@ -22,6 +22,11 @@ const Login = (props) => {
                 if (response.status === 204) {
                     props.login();
                     setToHome(true);
+                }
+                if (response.status === 200) {
+                    setToHome(true)
+                    setToken(response.data.data.access_token)
+                    // sessionStorage.setItem('access_token',response.data.data.access_token)
                 }
             }).catch(error => {
                 if (error.response && error.response.status === 422) {
@@ -34,6 +39,7 @@ const Login = (props) => {
         });
     }
     if (toHome === true) {
+        // console.log(props.loggedIn)
         return <Redirect to='/' />
     }
     return (
