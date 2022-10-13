@@ -42,9 +42,7 @@ const App = () => {
           <Route path='/' exact render={props => (
             <Books {...props} loggedIn={loggedIn} />
           )} />
-          <Route path='/login' render={props => (
-            <Login {...props} login={login} />
-          )} />
+          
         </Switch>
       </div>
     </Router>
